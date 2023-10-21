@@ -1,39 +1,41 @@
-# degenfutures
+# DegenFutures 
 
+## Overview
+The `DegenFutures` is a Solidity smart contract designed to handle transactions involving Ethereum (ETH) for a prediction market related to the NFL Super Bowl. Users can contribute to or withdraw from the contract at a dynamically changing price.
 
-This is a Solidity smart contract named DegenFutures. The contract is designed to handle transactions involving Ethereum (ETH) for a kind of prediction market related to the NFL Super Bowl. Users can buy into the contract ("contribute") or sell their share ("burn") at a dynamically changing price. 
+## State Variables
+- `price`: The current price to contribute to the contract, initially set to 0.003 ETH in wei.
+- `owner`: The address of the contract owner.
+- `walletAddresses`: An array that stores the addresses of all the contributors.
+- `totalWallets`: A counter for the total number of contributing wallets.
+- `contributorCounts`: A mapping to track the number of contributions made by each address.
+- `isActiveContributor`: A mapping to keep track of whether an address is an active contributor.
+- `trades`: An array of `Trade` structs that record all trades.
 
-State Variables
-price: Initially set to 0.003 ETH in wei. This is the current price to contribute to the contract.
-owner: Stores the address of the contract owner.
-walletAddresses: An array storing the addresses of contributors.
-totalWallets: Count of total contributing wallets.
-contributorCounts: Mapping to track the number of contributions made by each address.
-isActiveContributor: Mapping to track if an address is an active contributor.
-trades: An array of Trade structs to record all trades.
-Struct
-Trade: Records information about a transaction. It keeps track of the transaction number, action type ("contribute" or "burn"), wallet address involved, the contract's balance, and the new price after the trade.
+## Struct
+- `Trade`: Records a transaction, capturing details like transaction number, action type ("contribute" or "burn"), wallet address, contract balance, and the new price post-trade.
 
-Events
-Contributed: Emitted when someone contributes to the contract.
-Burned: Emitted when someone "burns" their contribution.
-FundsWithdrawn: Emitted when the owner withdraws funds.
-Constructor
-Initializes the owner to the address that deploys the contract and sets totalWallets to 0.
-receive() Function
-Allows the contract to receive ETH by calling executeTrade() with "contribute" as an argument.
+## Events
+- `Contributed`: Emitted when a contribution is made.
+- `Burned`: Emitted when a contribution is "burned" or sold.
+- `FundsWithdrawn`: Emitted when the contract owner withdraws funds.
 
-Functions
-Public Functions
-contribute(): Allows an address to contribute ETH to the contract, adds it to the contributors list, and updates the price.
-burn(): Allows a contributor to sell and "burn" their share, which then decreases the contract's price.
-transfer(): Allows the contract's owner to transfer one contributor count from one address to another.
-getAllTrades(): Returns all trades that have occurred.
-getAllWalletAddresses(): Returns all wallet addresses that have contributed.
-withdraw(): Allows the owner to withdraw all ETH from the contract.
-Internal Functions
-executeTrade(): The core logic for both "contribute" and "burn" operations. Updates the price, wallet counts, and emits events accordingly.
-removeAddressFromArray(): Removes an address from the walletAddresses array. Used in the "burn" function to clean up.
+## Constructor
+- Sets the `owner` as the address deploying the contract and initializes `totalWallets` to 0.
 
-Access Control
-Several functions have conditions that must be met for the function to execute. For instance, only the owner can execute the transfer() and withdraw() functions. Additionally, an address must have contributed at least once to execute the burn() function.
+## Functions
+
+### Public Functions
+1. `contribute()`: Allows users to contribute ETH to the contract.
+2. `burn()`: Allows contributors to "burn" or sell their shares.
+3. `transfer()`: Allows the contract owner to transfer contributor counts between addresses.
+4. `getAllTrades()`: Returns an array of all trades.
+5. `getAllWalletAddresses()`: Returns an array of all wallet addresses.
+6. `withdraw()`: Allows the contract owner to withdraw all ETH from the contract.
+
+### Internal Functions
+1. `executeTrade()`: Handles the core logic for both "contribute" and "burn" operations.
+2. `removeAddressFromArray()`: Used in the `burn()` function to remove an address from the `walletAddresses` array.
+
+## Access Control
+- Several functions have prerequisites for execution. For example, only the owner can execute `transfer()` and `withdraw()`. An address must have contributed at least once to execute `burn()`.

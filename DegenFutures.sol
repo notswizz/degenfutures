@@ -33,9 +33,7 @@ contract DegenFutures {
         executeTrade("contribute");
     }
 
-    function contribute() external payable {
-        executeTrade("contribute");
-    }
+
 
     function burn() external {
         require(contributorCounts[msg.sender] > 0, "You are not a contributor");
